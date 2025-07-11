@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>Semaforo con audio MP3</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 50px;
+    background-color: #f0f0f0;
+  }
+  .semaforo {
+    width: 100px;
+    height: 300px;
+    margin: 0 auto 20px;
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .luce {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #555;
+    opacity: 0.2;
+    transition: opacity 0.3s;
+  }
+  .acceso {
+    opacity: 1 !important;
+  }
+  #rosso { background-color: red; }
+  #giallo { background-color: yellow; }
+  #verde { background-color: green; }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="semaforo">
+  <div id="rosso" class="luce"></div>
+  <div id="giallo" class="luce"></div>
+  <div id="verde" class="luce"></div>
+</div>
+<button id="btn">Accendi Semaforo</button>
+
+<script>
+  const luci = {
+    rosso: document.getElementById('rosso'),
+    giallo: document.getElementById('giallo'),
+    verde: document.getElementById('verde')
+  };
+
+  let timeoutID;
+
+  function resetSemaforo() {
+    Object.values(luci).forEach(luce => luce.classList.remove('acceso'));
+  }
+
+  function playSound(color) {
+    let audio;
+    if (color === 'rosso') audio = new Audio('audio/rosso.mp3');
+    else if (color === 'giallo') audio = new Audio('audio/giallo.mp3');
+    else if (color === 'verde') audio = new Audio('audio/verde.mp3');
+
+    if (audio) audio.play();
+  }
+
+  function accendiSemaforo() {
+    if (timeoutID) clearTimeout(timeoutID);
+    resetSemaforo();
+
+    const colori = ['rosso', 'giallo', 'verde'];
+    const scelta = colori[Math.floor(Math.random() * colori.length)];
+
+    luci[scelta].classList.add('acceso');
+    playSound(scelta);
+
+    timeoutID = setTimeout(() => {
+      resetSemaforo();
+    }, 3000);
+  }
+
+  document.getElementById('btn').addEventListener('click', accendiSemaforo);
+
+  // Inizio spento
+  resetSemaforo();
+</script>
+
+</body>
+</html>
+
